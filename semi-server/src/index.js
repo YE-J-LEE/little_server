@@ -1,23 +1,17 @@
 const Koa = require('koa');
+const Router = require('koa-router');
+
 const app = new Koa();
+const router = new Router();
+const api = require('./api');
 
-app.use((ctx, next) =>{
-    console.log(1);
-    const started = new Date();
-    await next();
-    console.log(new Date() - started + 'ms');
-  
+router.use('/api', api.routes());
 
-});
 
-app.use((ctx, next) =>{
-    console.log(2);
-    next();
-});
-app.use(ctx =>{
-    ctx.body = "Hello Koa";
+// 미들웨어 등록
+app.use(router.routes()).use(router.allowedMethods());
 
-});
+
 app.listen(4000, () =>{
     console.log('semi-server is listening to port 4000');
 });
